@@ -1,4 +1,4 @@
-package org.example.cursospringboot.repository;
+package org.example.cursospringboot.domain.repository;
 
 import java.util.List;
 import org.example.cursospringboot.domain.entity.Cliente;

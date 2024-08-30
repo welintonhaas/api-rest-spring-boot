@@ -1,4 +1,4 @@
-package org.example.cursospringboot.repository;
+package org.example.cursospringboot.domain.repository;
 
 import org.example.cursospringboot.domain.entity.Cliente;
 import org.example.cursospringboot.domain.entity.Pedido;
