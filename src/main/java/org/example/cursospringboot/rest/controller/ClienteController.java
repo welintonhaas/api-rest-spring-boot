@@ -30,4 +30,11 @@ public class ClienteController {
         }
     }
 
+    @PostMapping("/")
+    @ResponseBody
+    public ResponseEntity<Cliente> save(@RequestBody Cliente cliente) {
+        cliente = clientes.save(cliente);
+        return ResponseEntity.ok(cliente);
+    }
+
 }
