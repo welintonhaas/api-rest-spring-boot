@@ -6,16 +6,20 @@ import jakarta.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "CLIENTE")
+@Table(name = "cliente")
 public class Cliente
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "ID")
+	@Column(name = "id")
 	private Integer id;
 
-	@Column(name = "NOME",length = 100)
+	@Column(name = "nome",length = 100)
 	private String nome;
+
+	@Column(name = "cpf", length = 11)
+	private String cpf;
+
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
@@ -66,5 +70,13 @@ public class Cliente
 
     public void setPedidos(Set<Pedido> pedidos) {
         this.pedidos = pedidos;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 }
