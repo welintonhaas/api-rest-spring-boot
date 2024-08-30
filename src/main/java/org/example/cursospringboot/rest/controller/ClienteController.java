@@ -12,7 +12,7 @@ import java.util.Optional;
 @RequestMapping("/api/clientes")
 public class ClienteController {
 
-    private ClientesRepository clientes;
+    private final ClientesRepository clientes;
 
     private ClienteController(ClientesRepository clientesRepository) {
         this.clientes = clientesRepository;
@@ -23,11 +23,7 @@ public class ClienteController {
     public ResponseEntity<Cliente> getClienteById(@PathVariable Integer id) {
         Optional<Cliente> cliente = clientes.findById(id);
 
-        if (cliente.isPresent()) {
-            return ResponseEntity.ok(cliente.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return cliente.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/")
