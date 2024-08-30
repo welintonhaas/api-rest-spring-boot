@@ -2,10 +2,13 @@ package org.example.cursospringboot.rest.controller;
 
 import org.example.cursospringboot.domain.entity.Cliente;
 import org.example.cursospringboot.domain.repository.ClientesRepository;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -26,7 +29,7 @@ public class ClienteController {
         return cliente.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/")
+    @PostMapping
     @ResponseBody
     public ResponseEntity<Cliente> save(@RequestBody Cliente cliente) {
         cliente = clientes.save(cliente);
@@ -56,5 +59,17 @@ public class ClienteController {
         return ResponseEntity.notFound().build();
     }
 
+    @GetMapping
+    @ResponseBody
+    public ResponseEntity<List<Cliente>> find(Cliente filtro){
+        ExampleMatcher matcher = ExampleMatcher
+                .matching()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+
+        Example<Cliente> example = Example.of(filtro, matcher);
+        List<Cliente> lista = clientes.findAll(example);
+        return ResponseEntity.ok(lista);
+    }
 
 }
