@@ -13,6 +13,7 @@ import java.util.List;
 public class PedidoDTO
 {
     private Long id;
+    private Integer cliente;
     private BigDecimal total;
     private List<ItemPedidoDTO> itens;
 
