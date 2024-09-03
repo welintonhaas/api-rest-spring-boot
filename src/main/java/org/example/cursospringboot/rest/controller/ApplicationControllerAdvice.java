@@ -1,5 +1,6 @@
 package org.example.cursospringboot.rest.controller;
 
+import org.example.cursospringboot.exception.PedidoNaoEncontradoException;
 import org.example.cursospringboot.exception.RegraNegocioException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,5 +15,11 @@ public class ApplicationControllerAdvice {
     public ApiErrors handleRegraNegocioException(RegraNegocioException ex) {
         String mensagem = ex.getMessage();
         return new ApiErrors(mensagem);
+    }
+
+    @ExceptionHandler(PedidoNaoEncontradoException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiErrors handlePedidosNotFoundException(PedidoNaoEncontradoException ex) {
+        return new ApiErrors(ex.getMessage());
     }
 }

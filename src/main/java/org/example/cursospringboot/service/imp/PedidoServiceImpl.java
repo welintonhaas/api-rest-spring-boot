@@ -5,10 +5,12 @@ import org.example.cursospringboot.domain.entity.Cliente;
 import org.example.cursospringboot.domain.entity.ItemPedido;
 import org.example.cursospringboot.domain.entity.Pedido;
 import org.example.cursospringboot.domain.entity.Produto;
+import org.example.cursospringboot.domain.enums.StatusPedido;
 import org.example.cursospringboot.domain.repository.ClientesRepository;
 import org.example.cursospringboot.domain.repository.ItemsPedidoRepository;
 import org.example.cursospringboot.domain.repository.PedidosRepository;
 import org.example.cursospringboot.domain.repository.ProdutosRepository;
+import org.example.cursospringboot.exception.PedidoNaoEncontradoException;
 import org.example.cursospringboot.exception.RegraNegocioException;
 import org.example.cursospringboot.rest.dto.ItemPedidoDTO;
 import org.example.cursospringboot.rest.dto.PedidoDTO;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -44,8 +47,9 @@ public class PedidoServiceImpl implements PedidoService {
         pedido.setTotal(dto.getTotal());
         pedido.setDataPedido(LocalDate.now());
         pedido.setCliente(cliente);
+        pedido.setStatus(StatusPedido.REALIZADO);
 
-        List<ItemPedido> itens = ConverterItens(pedido, dto.getItens());
+        List<ItemPedido> itens = converterItens(pedido, dto.getItens());
         repository.save(pedido);
         itemsRepository.saveAll(itens);
         pedido.setItens(itens);
@@ -53,7 +57,22 @@ public class PedidoServiceImpl implements PedidoService {
         return pedido;
     }
 
-    private List<ItemPedido> ConverterItens(Pedido pedido, List<ItemPedidoDTO> itens) {
+    @Override
+    public Optional<Pedido> obterPedidoCompleto(Integer id) {
+        return repository.findByIdFetchItens(id);
+    }
+
+    @Override
+    @Transactional
+    public void atualizarStatus(Integer id, StatusPedido status) {
+        repository.findById(id)
+                .map( pedido -> {
+                    pedido.setStatus(status);
+                    return repository.save(pedido);
+                }).orElseThrow(PedidoNaoEncontradoException::new);
+    }
+
+    private List<ItemPedido> converterItens(Pedido pedido, List<ItemPedidoDTO> itens) {
         if (itens.isEmpty()) {
             throw new RegraNegocioException("Não é permitido criar um pedido sem itens");
         }
