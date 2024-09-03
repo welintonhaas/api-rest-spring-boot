@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.cursospringboot.domain.enums.StatusPedido;
+import org.example.cursospringboot.validation.NotEmptyList;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -35,6 +36,7 @@ public class Pedido
 	@Column(name = "status")
 	private StatusPedido status;
 
+	@NotEmptyList(message = "Pedido não pode ser realizado sem itens")
 	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
 	private List<ItemPedido> itens;
 
