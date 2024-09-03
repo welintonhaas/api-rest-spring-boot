@@ -1,5 +1,6 @@
 package org.example.cursospringboot.rest.controller;
 
+import jakarta.validation.Valid;
 import org.example.cursospringboot.domain.entity.ItemPedido;
 import org.example.cursospringboot.domain.entity.Pedido;
 import org.example.cursospringboot.domain.enums.StatusPedido;
@@ -32,7 +33,7 @@ public class PedidoController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public Integer save(@RequestBody PedidoDTO dto) {
+    public Integer save(@RequestBody @Valid PedidoDTO dto) {
         return service.salvar(dto).getId();
     }
 
