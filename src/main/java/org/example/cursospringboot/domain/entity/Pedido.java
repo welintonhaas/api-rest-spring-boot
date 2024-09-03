@@ -1,6 +1,7 @@
 package org.example.cursospringboot.domain.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ public class Pedido
 	private Integer id;
 
 	@ManyToOne
+	@NotNull(message = "{campo.codigo-cliente.obrigatorio}")
 	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
 
@@ -30,13 +32,14 @@ public class Pedido
 	private LocalDate dataPedido;
 
 	@Column(name = "total", precision = 20, scale = 2)
+	@NotNull(message = "{campo.total-pedido.obrigatorio}")
 	private BigDecimal total;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status")
 	private StatusPedido status;
 
-	@NotEmptyList(message = "Pedido não pode ser realizado sem itens")
+	@NotEmptyList(message = "{campo.items-pedido.obrigatorio}")
 	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
 	private List<ItemPedido> itens;
 
